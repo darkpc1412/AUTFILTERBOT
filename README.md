@@ -1,6 +1,11 @@
-<p align="center">
-  <img src="https://te.legra.ph/file/5410b1d4091f5adfa8e17.jpg" alt="ʜᴇɪsᴇɴ ʟᴏɢᴏ">
+## Deploy
+You can deploy this bot anywhere.
+
+<details><summary>Deploy To Heroku</summary>
+<p>
+<br>
+<a href="https://heroku.com/deploy?template=https://github.com/darkpc1412/AUTFILTERBOT">
+  <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
+</a>
 </p>
-<h1 align="center">
-  <b>Gᴛ ᴅᴜʟǫᴜʀ ʙᴏᴛ</b>
-</h1>
+</details>
