@@ -1,5 +1,7 @@
+from asyncio.log import logger
 import re
 from os import environ
+import time
 
 id_pattern = re.compile(r'^.\d+$')
 def is_enabled(value, default):
@@ -10,11 +12,23 @@ def is_enabled(value, default):
     else:
         return default
 
+def redirected_env(value):
+    value = str(value)
+    if value.lower() in ['chat', 'group', 'channel', 'supergroup', 'true']:
+        return 'Chat'
+    elif value.lower() in ['user', '0', 'pm', 'personal', 'bot', 'bot pm', 'false']:
+        return 'PM'
+    else:
+        return 'Chat'
+
 # Bot information
 SESSION = environ.get('SESSION', 'Media_search')
 API_ID = int(environ['API_ID'])
 API_HASH = environ['API_HASH']
 BOT_TOKEN = environ['BOT_TOKEN']
+
+
+
 
 # Bot settings
 CACHE_TIME = int(environ.get('CACHE_TIME', 300))
@@ -30,6 +44,18 @@ auth_channel = environ.get('AUTH_CHANNEL')
 auth_grp = environ.get('AUTH_GROUP')
 AUTH_CHANNEL = int(auth_channel) if auth_channel and id_pattern.search(auth_channel) else None
 AUTH_GROUPS = [int(ch) for ch in auth_grp.split()] if auth_grp else None
+pm = environ.get('PM')
+PM = int(pm) if pm and id_pattern.search(pm) else None
+
+ 
+#My Own by @KoshikKumar17
+COMMAND_HAND_LER = environ.get("COMMAND_HAND_LER", ".")
+#For heroku dyno status
+HEROKU_API_KEY = environ.get("HEROKU_API_KEY", "")
+HEROKU_APP_NAME = environ.get("HEROKU_AP_NAME", "")
+BT_STRT_TM = time.time()
+
+
 
 # MongoDB information
 DATABASE_URI = environ.get('DATABASE_URI', "")
@@ -42,9 +68,9 @@ SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'TeamEvamaria')
 P_TTI_SHOW_OFF = is_enabled((environ.get('P_TTI_SHOW_OFF', "False")), False)
 IMDB = is_enabled((environ.get('IMDB', "True")), True)
 SINGLE_BUTTON = is_enabled((environ.get('SINGLE_BUTTON', "False")), False)
-CUSTOM_FILE_CAPTION = environ.get("CUSTOM_FILE_CAPTION", "<b>📂 Fɪʟᴇ ɴᴀᴍᴇ :</b>  <code>{file_name}</code>\n\n╭─────── • ◆ • ───────╮\n<b>🔅 Dᴀʀᴋ Mᴏᴅᴇ :  [Tᴏᴜᴄʜ](https://t.me/addtheme/LsoPVwuYZ1woPi2g)</b>\n<b>🔅 Dᴀʀᴋ Mᴏᴅᴇ ˣᵐˡ : [Tᴏᴜᴄʜ](https://t.me/GTDulquarbot?start=ZmlsZV9CUUFEQkFBRGlBc0FBaW9BQVhoUW5zVnZhaGhkOWpRV0JB)</b>\n╰─────── • ◆ • ───────╯\n\n <b>=========== • ✠ • ===========\n▫️ ɢʀᴏᴜᴘ : <b><i>@Cinimalokham</i></b>\n▫️ ᴄʜᴀɴɴᴇʟ : <b><i>@CLMlinkz</i></b>\n=========== • ✠ • ===========</b>")
+CUSTOM_FILE_CAPTION = environ.get("CUSTOM_FILE_CAPTION", None)
 BATCH_FILE_CAPTION = environ.get("BATCH_FILE_CAPTION", CUSTOM_FILE_CAPTION)
-IMDB_TEMPLATE = environ.get("IMDB_TEMPLATE", "<b>Query: {query}</b> \n‌‌‌‌IMDb Data:\n\n🏷 Title: <a href={url}>{title}</a>\n🎭 Genres: {genres}\n📆 Year: <a href={url}/releaseinfo>{year}</a>\n🌟 Rating: <a href={url}/ratings>{rating}</a> / 10")
+IMDB_TEMPLATE = environ.get("IMDB_TEMPLATE", "<b>🎬 Title:</b> <a href={url}>{title}</a></b>\n<b>📆 Release:</b> <a href={url}/releaseinfo>{release_date}</a>\n<b>🌟 Rating:</b> <a href={url}/ratings>{rating} / 10</a>\n<b>🎭 Genres:</b> #{genres}\n<b>📀 Runtime:</b> <code>{runtime} minutes</code>\n<b>☀️ Languages:</b> #{languages}\n<b>🌎 Country of Origin:</b> #{countries}\n<b>🎥 Director:</b> {director}\n</a></b>")
 LONG_IMDB_DESCRIPTION = is_enabled(environ.get("LONG_IMDB_DESCRIPTION", "False"), False)
 SPELL_CHECK_REPLY = is_enabled(environ.get("SPELL_CHECK_REPLY", "True"), True)
 MAX_LIST_ELM = environ.get("MAX_LIST_ELM", None)
@@ -53,6 +79,14 @@ FILE_STORE_CHANNEL = [int(ch) for ch in (environ.get('FILE_STORE_CHANNEL', '')).
 MELCOW_NEW_USERS = is_enabled((environ.get('MELCOW_NEW_USERS', "True")), True)
 PROTECT_CONTENT = is_enabled((environ.get('PROTECT_CONTENT', "False")), False)
 PUBLIC_FILE_STORE = is_enabled((environ.get('PUBLIC_FILE_STORE', "True")), True)
+MY_CAPTION = "FILE : <code>{file_name}</code> \nSize : <i>{file_size}</i>\n\n Hello {message.from_user.first_name} \n\n⚠️ കോപ്പി റൈറ്റ് ഉള്ളത് കൊണ്ട് ഈ ഒരു ഫയൽ 1 മണിക്കൂർകൊണ്ട് ഇവിടെ നിന്നും ഡിലേറ്റാവും...!!!\n\nഇവിടെ നിന്നും വേറെ എവിടേലും മാറ്റിയതിന് ശേഷം ഡൗൺലോഡ് ചെയ്യുക...!!!\n\nFILES FORWARD TO YOUR SAVED MESSAGES\n\nAll files here Gets Deleted With in 1 hour."
+ 
+
+
+DELETE_TIME = int(environ.get('DELETE_TIME', 300))
+START_IMAGE_URL = environ.get('START_IMAGE_URL', "")
+UNAUTHORIZED_CALLBACK_TEXT = (environ.get('UNAUTHORIZED_CALLBACK_TEXT', "oKda"))[:200]
+REDIRECT_TO = (environ.get('REDIRECT_TO', 0))
 
 LOG_STR = "Current Cusomized Configurations are:-\n"
 LOG_STR += ("IMDB Results are enabled, Bot will be showing imdb details for you queries.\n" if IMDB else "IMBD Results are disabled.\n")
